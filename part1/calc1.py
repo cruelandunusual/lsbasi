@@ -63,8 +63,12 @@ class Interpreter(object):
         # index to point to the next character after the digit,
         # and return the INTEGER token
         if current_char.isdigit():
+            # create a token instance of type INTEGER pass it the
+            # value of current_char as an int 
             token = Token(INTEGER, int(current_char))
+            # increment the position to point to the next char in input string
             self.pos += 1
+            # return the instantiated token to the caller
             return token
 
         if current_char == '+':
@@ -99,8 +103,12 @@ class Interpreter(object):
         self.eat(INTEGER)
 
         # we expect the current token to be a '+' token
+        # op = self.current_token
+        # self.eat(PLUS)
+
+        # we expect the current token to be a '-' token
         op = self.current_token
-        self.eat(PLUS)
+        self.eat(MINUS)
 
         # we expect the current token to be a single-digit integer
         right = self.current_token
@@ -112,7 +120,7 @@ class Interpreter(object):
         # has been successfully found and the method can just
         # return the result of adding two integers, thus
         # effectively interpreting client input
-        result = left.value + right.value
+        result = left.value - right.value
         return result
 
 
