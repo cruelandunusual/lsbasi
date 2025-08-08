@@ -47,27 +47,31 @@ class Interpreter(object):
         apart into tokens. One token at a time.
         """
         text = self.text
-
         # is self.pos index past the end of the self.text ?
         # if so, then return EOF token because there is no more
         # input left to convert into tokens
         if self.pos > len(text) - 1:
             return Token(EOF, None)
-
         # get a character at the position self.pos and decide
         # what token to create based on the single character
         current_char = text[self.pos]
-
         # if the character is a digit then convert it to
         # integer, create an INTEGER token, increment self.pos
         # index to point to the next character after the digit,
         # and return the INTEGER token
         if current_char.isdigit():
+            value = '' # value will store the multidigit number
+            while (current_char.isdigit()):
+                value += current_char
+                self.pos += 1
+                if self.pos == len(self.text):
+                    break
+                current_char = text[self.pos]
             # create a token instance of type INTEGER pass it the
             # value of current_char as an int 
             token = Token(INTEGER, int(current_char))
             # increment the position to point to the next char in input string
-            self.pos += 1
+            #self.pos += 1
             # return the instantiated token to the caller
             return token
 
@@ -94,7 +98,7 @@ class Interpreter(object):
             self.error()
 
     def expr(self):
-        """expr -> INTEGER PLUS INTEGER"""
+        """expr -> INTEGER MINUS INTEGER"""
         # set current token to the first token taken from the input
         self.current_token = self.get_next_token()
 
