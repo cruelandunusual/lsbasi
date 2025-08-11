@@ -2,8 +2,7 @@
 #
 # EOF (end-of-file) token is used to indicate that
 # there is no more input left for lexical analysis
-INTEGER, PLUS, MINUS, EOF = 'INTEGER', 'PLUS', 'MINUS', 'EOF'
-
+INTEGER, PLUS, MINUS, WHITESPACE, EOF= 'INTEGER', 'PLUS', 'MINUS', 'WHITESPACE', 'EOF'
 
 class Token(object):
     def __init__(self, type, value):
@@ -52,26 +51,24 @@ class Interpreter(object):
         # input left to convert into tokens
         if self.pos > len(text) - 1:
             return Token(EOF, None)
-        # get a character at the position self.pos and decide
-        # what token to create based on the single character
+        # get a character at the position self.pos 
         current_char = text[self.pos]
-        # if the character is a digit then convert it to
-        # integer, create an INTEGER token, increment self.pos
-        # index to point to the next character after the digit,
-        # and return the INTEGER token
         if current_char.isdigit():
             value = '' # value will store the multidigit number
+            # check if a multidigit integer has been entered by checking if
+            # the next char is also a digit
             while (current_char.isdigit()):
                 value += current_char
+                # increment the position to point to the next char in input string
                 self.pos += 1
+                # if we've reached the end of the input string then get out of the loop 
                 if self.pos == len(self.text):
                     break
+                # set current_char to the next character in the string for the next loop iteration
                 current_char = text[self.pos]
             # create a token instance of type INTEGER pass it the
             # value of current_char as an int 
-            token = Token(INTEGER, int(current_char))
-            # increment the position to point to the next char in input string
-            #self.pos += 1
+            token = Token(INTEGER, int(value))
             # return the instantiated token to the caller
             return token
 
@@ -82,6 +79,11 @@ class Interpreter(object):
         
         if current_char == '-':
             token = Token(MINUS, current_char)
+            self.pos += 1
+            return token
+
+        if current_char == ' ':
+            token = Token(WHITESPACE, current_char)
             self.pos += 1
             return token
 
@@ -102,10 +104,12 @@ class Interpreter(object):
         # set current token to the first token taken from the input
         self.current_token = self.get_next_token()
 
-        # we expect the current token to be a single-digit integer
+        # we expect the current token to be an integer
         left = self.current_token
         self.eat(INTEGER)
 
+        whitespace = self.current_token
+        self.eat(WHITESPACE)
         # we expect the current token to be a '+' token
         # op = self.current_token
         # self.eat(PLUS)
@@ -114,15 +118,18 @@ class Interpreter(object):
         op = self.current_token
         self.eat(MINUS)
 
-        # we expect the current token to be a single-digit integer
+        whitespace = self.current_token
+        self.eat(WHITESPACE)
+ 
+        # we expect the current token to be an integer
         right = self.current_token
         self.eat(INTEGER)
         # after the above call the self.current_token is set to
         # EOF token
 
-        # at this point INTEGER PLUS INTEGER sequence of tokens
+        # at this point INTEGER MINUS INTEGER sequence of tokens
         # has been successfully found and the method can just
-        # return the result of adding two integers, thus
+        # return the result of subtracting the second integer from the first,
         # effectively interpreting client input
         result = left.value - right.value
         return result
