@@ -104,26 +104,44 @@ class Interpreter(object):
         # set current token to the first token taken from the input
         self.current_token = self.get_next_token()
 
+        # ignore whitespace
+        while (self.current_token.type == WHITESPACE):
+            self.eat(WHITESPACE)
+
         # we expect the current token to be an integer
         left = self.current_token
         self.eat(INTEGER)
 
-        whitespace = self.current_token
-        self.eat(WHITESPACE)
-        # we expect the current token to be a '+' token
-        # op = self.current_token
-        # self.eat(PLUS)
+        # ignore whitespace
+        while (self.current_token.type == WHITESPACE):
+            self.eat(WHITESPACE)
 
         # we expect the current token to be a '-' token
         op = self.current_token
-        self.eat(MINUS)
+        op = self.current_token
+        opf = None
+        if op.type == PLUS:
+            self.eat(PLUS)
+            opf = operator.add
+        if op.type == MINUS:
+            self.eat(MINUS)
+            opf = operator.sub
 
-        whitespace = self.current_token
-        self.eat(WHITESPACE)
- 
+
+       self.eat(MINUS)
+
+        # ignore whitespace
+        while (self.current_token.type == WHITESPACE):
+            self.eat(WHITESPACE)
+
         # we expect the current token to be an integer
         right = self.current_token
         self.eat(INTEGER)
+
+        # ignore whitespace
+        while (self.current_token.type == WHITESPACE):
+            self.eat(WHITESPACE)
+
         # after the above call the self.current_token is set to
         # EOF token
 
@@ -143,9 +161,21 @@ def main():
             break
         if not text:
             continue
+        if quit(text):
+            break
+        # make a new interpreter object for each loop iteration
         interpreter = Interpreter(text)
+        # call the expr() method on the interpreter object;
+        # this takes care of scanning the text
         result = interpreter.expr()
         print(result)
+
+
+def quit(text):
+    if text == 'q' or text == 'quit' or text == 'exit':
+        return True
+    else:
+        return False
 
 
 if __name__ == '__main__':
