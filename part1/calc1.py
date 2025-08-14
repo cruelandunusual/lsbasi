@@ -26,6 +26,16 @@ class Token(object):
     def __repr__(self):
         return self.__str__()
 
+class Operator():
+    def __init__(self):
+
+    def error(operation):
+        raise Exception('Not a valid arithmetic operation')
+
+    def operation(lvalue, rvalue):
+        return lvalue - rvalue
+
+    def 
 
 class Interpreter(object):
     def __init__(self, text):
@@ -35,6 +45,7 @@ class Interpreter(object):
         self.pos = 0
         # current token instance
         self.current_token = None
+        self.opf = Operator()
 
     def error(self):
         raise Exception('Error parsing input')
@@ -116,10 +127,9 @@ class Interpreter(object):
         while (self.current_token.type == WHITESPACE):
             self.eat(WHITESPACE)
 
-        # we expect the current token to be a '-' token
+        # get the operator used 
         op = self.current_token
-        op = self.current_token
-        opf = None
+        #opf = None
         if op.type == PLUS:
             self.eat(PLUS)
             opf = operator.add
@@ -127,8 +137,6 @@ class Interpreter(object):
             self.eat(MINUS)
             opf = operator.sub
 
-
-       self.eat(MINUS)
 
         # ignore whitespace
         while (self.current_token.type == WHITESPACE):
@@ -149,7 +157,8 @@ class Interpreter(object):
         # has been successfully found and the method can just
         # return the result of subtracting the second integer from the first,
         # effectively interpreting client input
-        result = left.value - right.value
+        #result = left.value - right.value
+        result = opf(left.value, right.value)
         return result
 
 
