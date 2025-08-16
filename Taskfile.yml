@@ -1,0 +1,35 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  DIR_BIN: bin
+  DIR_SRC: part1
+  SRC_FILE: calc1.py
+  EXEC_NAME: python3
+
+  MSG_CREATE_BIN_DIR: No existing {{.DIR_BIN}} directory. Making it now...
+  MSG_DELETE_BINARY: Removing existing binary...
+  MSG_BUILD: Building {{.EXEC_NAME}} in {{.DIR_BIN}}/ from .go files in {{.DIR_SRC}}/...
+
+tasks:
+  build:
+    desc: runs {{.EXEC_NAME}} {{.DIR_SRC}}/{{.SRC_FILE}}
+    cmds:
+      - |
+        {{.EXEC_NAME}} {{.DIR_SRC}}/{{.SRC_FILE}}
+    env:
+    silent: true
+  default:
+    desc: runs {{.EXEC_NAME}} {{.DIR_SRC}}/{{.SRC_FILE}}
+    cmds:
+      - task: build
+    env:
+    silent: true
+  inside:
+    desc: runs python from inside a subfolder
+    cmds:
+      - |
+        {{.EXEC_NAME}} {{.SRC_FILE}}
+    env:
+    silent: true
